@@ -7,7 +7,7 @@ const port = 3002;
 app.use(express.json());
 
 app.listen(port, () => {
-  console.log("server is running");
+  console.log("server is running on my port ",port);
 });
 
 app.get("/", (req, res) => {

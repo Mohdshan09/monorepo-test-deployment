@@ -28,12 +28,7 @@ jobs:
           script: |
             cd Turborepo-test-deployement/
             git pull
-            sudo apt install -y npm
-            
-            npm install -g pnpm
-            pnpm install
             pnpm run build
-            pnpm add -g pm2
             pm2 restart http-server
             pm2 restart websocket-server
             pm2 restart frontend-server
