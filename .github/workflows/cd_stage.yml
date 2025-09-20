@@ -1,0 +1,39 @@
+name: "Deploy to staging"
+
+on:
+  push:
+    branches:
+      - "main"
+
+jobs:
+  redeploy-frontend:
+    name: Deploying everything to the staging
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: SSH into the server and deploy
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: 98.88.38.201
+          username: ubuntu
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd Turborepo-test-deployement/
+            git pull
+            sudo apt install -y npm
+            
+            npm install -g pnpm
+            pnpm install
+            pnpm run build
+            pnpm add -g pm2
+            pm2 restart http-server
+            pm2 restart websocket-server
+            pm2 restart frontend-server
