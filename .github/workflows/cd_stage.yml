@@ -12,9 +12,10 @@ jobs:
     steps:
       - name: SSH Into the server
         run: |
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/ssh_key
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" &> ~/ssh_key
           chmod 600 ~/ssh_key
-          ssh -o StrictHostKeyChecking=no -i ~/ssh_key ubuntu@34.201.64.147 "
+          echo "${{secrets.KNOWN_HOSTS}}" &> ~/.ssh/known_hosts "
+          ssh -i ~/ssh_key ubuntu@34.201.64.147
             cd monorepo-test-deployment &&
             git pull &&
             source ~/.bashrc &&
