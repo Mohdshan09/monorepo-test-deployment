@@ -1,8 +1,9 @@
 name: Deploy to staging
+
 on:
   push:
     branches:
-      - "main"
+      - main   # no quotes needed
 
 jobs:
   redeploy_everything:
