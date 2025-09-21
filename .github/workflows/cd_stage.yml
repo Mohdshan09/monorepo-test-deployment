@@ -17,6 +17,8 @@ jobs:
           ssh -o StrictHostKeyChecking=no -i ~/ssh_key ubuntu@34.201.64.147 "
             cd monorepo-test-deployment &&
             git pull &&
+            source ~/.bashrc &&
+            which pnpm || npm install -g pnpm &&
             pnpm install &&
             pnpm run build &&
             pm2 restart frontend-server &&
