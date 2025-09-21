@@ -16,8 +16,8 @@ jobs:
           mkdir -p /home/runner/.ssh
           ls /home/runner/.ssh
           touch /home/runner/.ssh/known_hosts
-          echo "${{secrets.KNOWN_HOSTS}}" &> /home/runner/.ssh/known_hosts
-          chmod /home/runner/ssh_key
+          echo "${{secrets.KNOWN_HOSTS}}"  &> /home/runner/.ssh/known_hosts
+          chmod 700 /home/runner/ssh_key
           ssh -i ~/ssh_key ubuntu@34.201.64.147
           cd monorepo-test-deployment &&
           git pull &&
