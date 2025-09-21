@@ -3,31 +3,10 @@ name: Deploy to staging
 on:
   push:
     branches:
-      - main   # no quotes needed
+      - main
 
 jobs:
-  redeploy_everything:
-    name: Deploying everything to the staging cluster
+  test_job:
     runs-on: ubuntu-latest
-    
     steps:
-      - name: Setup SSH
-        run: |
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/ssh_key
-          chmod 600 ~/ssh_key
-          mkdir -p ~/.ssh
-          echo "${{ secrets.KNOWN_HOSTS }}" > ~/.ssh/known_hosts
-
-      - name: Deploy via SSH
-        run: |
-          ssh -o StrictHostKeyChecking=yes -i ~/ssh_key ubuntu@34.201.64.147 "
-            cd ~/monorepo-test-deployment && \
-            git pull && \
-            source ~/.bashrc && \
-            command -v pnpm >/dev/null 2>&1 || npm install -g pnpm && \
-            pnpm install && \
-            pnpm run build && \
-            pm2 restart frontend-server && \
-            pm2 restart socket-server && \
-            pm2 restart http-server
-          "
+      - run: echo "It works!"
