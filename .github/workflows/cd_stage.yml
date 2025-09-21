@@ -13,22 +13,22 @@ jobs:
       - name: SSH Into the server
         run: |
           echo "${{ secrets.SSH_PRIVATE_KEY }}" &> ~/ssh_key
-          chmod 700 ~/ssh_key
           mkdir -p /home/runner/.ssh
           ls /home/runner/.ssh
           touch /home/runner/.ssh/known_hosts
-          echo "${{secrets.KNOWN_HOSTS}}" &> /home/runner/.ssh "
+          echo "${{secrets.KNOWN_HOSTS}}" &> /home/runner/.ssh/known_hosts
+          chmod /home/runner/ssh_key
           ssh -i ~/ssh_key ubuntu@34.201.64.147
-            cd monorepo-test-deployment &&
-            git pull &&
-            source ~/.bashrc &&
-            which pnpm || npm install -g pnpm &&
-            pnpm install &&
-            pnpm run build &&
-            pm2 restart frontend-server &&
-            pm2 restart socket-server &&
-            pm2 restart http-server
-          "
+          cd monorepo-test-deployment &&
+          git pull &&
+          source ~/.bashrc &&
+          which pnpm || npm install -g pnpm &&
+          pnpm install &&
+          pnpm run build &&
+          pm2 restart frontend-server &&
+          pm2 restart socket-server &&
+          pm2 restart http-server
+          
           
 
 
