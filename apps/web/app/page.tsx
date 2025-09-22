@@ -5,7 +5,7 @@ const Home = async () => {
     <div>
       Name of the user
       <h2>Mohammad Shan</h2>
-      Password of the user
+      Password of the user is
       <h4>{user?.password}</h4>
     </div>
   );
