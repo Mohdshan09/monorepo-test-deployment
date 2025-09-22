@@ -1,53 +1,30 @@
-name: Deploy to Staging
+name: Deploy to staging
 
-# Trigger only on push to main or manual dispatch
 on:
   push:
-    branches:
-      - main
-  workflow_dispatch:
+    branches: [main]
 
 jobs:
-  deploy:
-    name: Deploy Everything to Staging
+  redeploy_everything:
     runs-on: ubuntu-latest
-
+    name: Deploying everything to the staging cluster
+    
     steps:
-      # 1️⃣ Checkout the repo (optional if you need local files)
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      # 2️⃣ Setup SSH key and known_hosts
-      - name: Setup SSH
+      - name: Deploy to server
         run: |
-          # Save private key
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/ssh_key
           chmod 600 ~/ssh_key
-
-          # Create SSH folder and add known_hosts
           mkdir -p ~/.ssh
           echo "${{ secrets.KNOWN_HOSTS }}" > ~/.ssh/known_hosts
-          chmod 644 ~/.ssh/known_hosts
-
-      # 3️⃣ Run all deploy commands on server via SSH
-      - name: Deploy via SSH
-        run: |
-          ssh -o StrictHostKeyChecking=yes -i ~/ssh_key ubuntu@34.201.64.147 "
-            set -e  # stop if any command fails
-            cd ~/monorepo-test-deployment
-
-            # Pull latest code
-            git pull
-
-            # Ensure pnpm is installed
-            command -v pnpm >/dev/null 2>&1 || npm install -g pnpm
-
-            # Install dependencies and build
-            pnpm install
-            pnpm run build
-
-            # Restart all PM2 services
-            pm2 restart frontend-server
-            pm2 restart socket-server
-            pm2 restart http-server
+          chmod 600 ~/.ssh/known_hosts
+          ssh -i ~/ssh_key root@34.201.64.147 "
+            cd monorepo-test-deployment/ &&
+            git pull origin main &&
+            export PATH=/home/ubuntu/.nvm/versions/node/v22.19.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin &&
+            npm install -g pnpm &&
+            pnpm install &&
+            pnpm run build &&
+            pm2 restart fe-server &&
+            pm2 restart http-server &&
+            pm2 restart ws-server
           "
