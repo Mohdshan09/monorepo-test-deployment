@@ -1,0 +1,30 @@
+name: Deploy to production
+
+on:
+  push:
+    branches: [production]
+
+jobs:
+  redeploy_everything:
+    runs-on: ubuntu-latest
+    name: Deploying everything to the production cluster
+    
+    steps:
+      - name: Deploy to server
+        run: |
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/ssh_key
+          chmod 600 ~/ssh_key
+          mkdir -p ~/.ssh
+          echo "${{ secrets.KNOWN_HOSTS }}" > ~/.ssh/known_hosts
+          chmod 600 ~/.ssh/known_hosts
+          ssh -i ~/ssh_key ubuntu@54.159.11.249 "
+            cd monorepo-test-deployment/ &&
+            git pull origin production &&
+            export PATH=/home/ubuntu/.nvm/versions/node/v22.19.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin &&
+            npm install -g pnpm &&
+            pnpm install &&
+            pnpm run build &&
+            pm2 restart frontend-server &&
+            pm2 restart http-server &&
+            pm2 restart websocket-server
+          "
