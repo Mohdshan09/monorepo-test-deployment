@@ -17,7 +17,7 @@ jobs:
           mkdir -p ~/.ssh
           echo "${{ secrets.KNOWN_HOSTS }}" > ~/.ssh/known_hosts
           chmod 600 ~/.ssh/known_hosts
-          ssh -i ~/ssh_key root@34.201.64.147 "
+          ssh -i ~/ssh_key ubuntu@34.201.64.147 "
             cd monorepo-test-deployment/ &&
             git pull origin main &&
             export PATH=/home/ubuntu/.nvm/versions/node/v22.19.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin &&
