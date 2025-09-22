@@ -4,7 +4,7 @@ const Home = async () => {
   return (
     <div>
       Name of the user
-      <h2>{user?.username}</h2>
+      <h2>Mohammad Shan</h2>
       Password of the user
       <h4>{user?.password}</h4>
     </div>
